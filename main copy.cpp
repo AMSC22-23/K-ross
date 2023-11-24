@@ -3,7 +3,7 @@
 #include <cmath>
 #include <limits>
 
-// Function to calculate the Euclidean distance between two points
+// Funzione per calcolare la distanza euclidea tra due punti
 double distance(const std::vector<double>& point1, const std::vector<double>& point2) {
     double sum = 0.0;
     for (size_t i = 0; i < point1.size(); ++i) {
@@ -12,7 +12,7 @@ double distance(const std::vector<double>& point1, const std::vector<double>& po
     return std::sqrt(sum);
 }
 
-// Function to assign each point to the nearest centroid
+// Funzione per assegnare ogni punto al centroide più vicino
 std::vector<int> assignPointsToCentroids(const std::vector<std::vector<double>>& points, const std::vector<std::vector<double>>& centroids) {
     std::vector<int> assignments(points.size(), 0);
 
@@ -30,7 +30,7 @@ std::vector<int> assignPointsToCentroids(const std::vector<std::vector<double>>&
     return assignments;
 }
 
-// Function to update the centroids based on the assigned points
+// Funzione per aggiornare i centroidi in base ai punti assegnati
 std::vector<std::vector<double>> updateCentroids(const std::vector<std::vector<double>>& points, const std::vector<int>& assignments, int k) {
     std::vector<std::vector<double>> newCentroids(k, std::vector<double>(points[0].size(), 0.0));
     std::vector<int> counts(k, 0);
@@ -52,7 +52,7 @@ std::vector<std::vector<double>> updateCentroids(const std::vector<std::vector<d
     return newCentroids;
 }
 
-// Function to check if the centroids have converged
+// Funzione per verificare se i centroidi hanno convergito
 bool hasConverged(const std::vector<std::vector<double>>& oldCentroids, const std::vector<std::vector<double>>& newCentroids, double epsilon) {
     for (size_t i = 0; i < oldCentroids.size(); ++i) {
         if (distance(oldCentroids[i], newCentroids[i]) > epsilon) {
@@ -62,9 +62,9 @@ bool hasConverged(const std::vector<std::vector<double>>& oldCentroids, const st
     return true;
 }
 
-// Function to perform k-means clustering
+// Funzione per eseguire il clustering k-means
 std::vector<int> kMeans(const std::vector<std::vector<double>>& points, int k, double epsilon, int maxIterations) {
-    // Initialize centroids randomly
+    // Inizializza i centroidi in modo casuale
     std::vector<std::vector<double>> centroids;
     for (int i = 0; i < k; ++i) {
         centroids.push_back(points[rand() % points.size()]);
@@ -88,14 +88,14 @@ std::vector<int> kMeans(const std::vector<std::vector<double>>& points, int k, d
 }
 
 int main() {
-    // Example usage
-    // Generate some random data points
+    // Esempio di utilizzo
+    // Genera alcuni punti dati casuali
     std::vector<std::vector<double>> points = {{1, 2}, {2, 3}, {5, 8}, {7, 8}, {10, 2}, {12, 3}, {15, 8}, {17, 8}};
     
-    // Set the number of clusters (k)
+    // Imposta il numero di cluster (k)
     int k = 2;
     
-    // Set the convergence threshold and maximum number of iterations
+    // Imposta la soglia di convergenza e il numero massimo di iterazioni
     double epsilon = 0.001;
     int maxIterations = 100;
     
