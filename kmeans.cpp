@@ -14,54 +14,54 @@ class Point
 {
 private:
 	int id_point, id_cluster;
-	vector<double> values;
-	int total_values;
-	string name;
+	vector<double> values; // valori delle features del punto
+	int total_values; // numero di features
+	string name; 
 
 public:
-	Point(int id_point, vector<double>& values, string name = "")
+	Point(int id_point, vector<double>& values, string name = "") //costruttore 
 	{
 		this->id_point = id_point;
-		total_values = values.size();
+		total_values = values.size(); // alloca il giusto numero di features
 
 		for(int i = 0; i < total_values; i++)
-			this->values.push_back(values[i]);
+			this->values.push_back(values[i]); // copia i valori delle features
 
 		this->name = name;
-		id_cluster = -1;
+		id_cluster = -1; // ancora non è stato assegnato a nessun cluster
 	}
 
-	int getID()
+	int getID() // restituisce l'id del punto
 	{
 		return id_point;
 	}
 
-	void setCluster(int id_cluster)
+	void setCluster(int id_cluster) //assegna il punto al cluster con l'id passato come parametro
 	{
 		this->id_cluster = id_cluster;
 	}
 
-	int getCluster()
+	int getCluster() // restituisce l'id del cluster a cui appartiene il punto
 	{
 		return id_cluster;
 	}
 
-	double getValue(int index)
+	double getValue(int index) // restituisce il valore della feature con l'indice passato come parametro
 	{
 		return values[index];
 	}
 
-	int getTotalValues()
+	int getTotalValues() // restituisce il numero di features
 	{
 		return total_values;
 	}
 
-	void addValue(double value)
+	void addValue(double value) // aggiunge un valore alla lista di features
 	{
 		values.push_back(value);
 	}
 
-	string getName()
+	string getName() // restituisce il nome del punto
 	{
 		return name;
 	}
@@ -70,31 +70,33 @@ public:
 class Cluster
 {
 private:
-	int id_cluster;
-	vector<double> central_values;
-	vector<Point> points;
+	int id_cluster; // id del cluster
+	vector<double> central_values; // centroide del cluster
+	vector<Point> points; //punti appartenenti al cluster
 
 public:
-	Cluster(int id_cluster, Point point)
+	Cluster(int id_cluster, Point point) // costruttore
 	{
 		this->id_cluster = id_cluster;
 
-		int total_values = point.getTotalValues();
+		int total_values = point.getTotalValues(); // numero di features del punto
 
 		for(int i = 0; i < total_values; i++)
-			central_values.push_back(point.getValue(i));
+			central_values.push_back(point.getValue(i)); //setta il centroide del cluster con i valori del punto
 
-		points.push_back(point);
+		points.push_back(point); // aggiunge il punto alla lista dei punti appartenenti al cluster !!!
 	}
 
-	void addPoint(Point point)
+	void addPoint(Point point) // aggiunge un punto alla lista dei punti appartenenti al cluster
 	{
 		points.push_back(point);
 	}
 
-	bool removePoint(int id_point)
+	// nomecluster.removePoint(id_punto) 
+
+	bool removePoint(int id_point) // rimuove un punto dalla lista dei punti appartenenti al cluster
 	{
-		int total_points = points.size();
+		int total_points = points.size(); 
 
 		for(int i = 0; i < total_points; i++)
 		{
@@ -107,27 +109,27 @@ public:
 		return false;
 	}
 
-	double getCentralValue(int index)
+	double getCentralValue(int index) // centroide del cluster
 	{
 		return central_values[index];
 	}
 
-	void setCentralValue(int index, double value)
+	void setCentralValue(int index, double value) // setta il centroide del cluster
 	{
 		central_values[index] = value;
 	}
 
-	Point getPoint(int index)
+	Point getPoint(int index) // restituisce il punto del vattore con l'indice passato come parametro
 	{
 		return points[index];
 	}
 
-	int getTotalPoints()
+	int getTotalPoints() // restituisce il numero di punti appartenenti al cluster
 	{
-		return points.size();
+		return points.size(); 
 	}
 
-	int getID()
+	int getID() // restituisce l'id del cluster 
 	{
 		return id_cluster;
 	}
@@ -136,17 +138,17 @@ public:
 class KMeans
 {
 private:
-	int K; // number of clusters
-	int total_values, total_points, max_iterations;
-	vector<Cluster> clusters;
+	int K; // numero di cluster
+	int total_values, total_points, max_iterations; // numero di features, numero di punti, numero massimo di iterazioni
+	vector<Cluster> clusters; // vettore di cluster
 
 	// return ID of nearest center (uses euclidean distance)
-	int getIDNearestCenter(Point point)
+	int getIDNearestCenter(Point point) // restituisce l'id del centroide più vicino al punto passato come parametro
 	{
 		double sum = 0.0, min_dist;
 		int id_cluster_center = 0;
 
-		for(int i = 0; i < total_values; i++)
+		for(int i = 0; i < total_values; i++) // per ogni features del punto
 		{
 			sum += pow(clusters[0].getCentralValue(i) -
 					   point.getValue(i), 2.0);
@@ -169,7 +171,7 @@ private:
 
 			if(dist < min_dist)
 			{
-				min_dist = dist;
+				min_dist = dist; // aggiorna la distanza minima con quella dal centroide con cui sta lavorando 
 				id_cluster_center = i;
 			}
 		}
@@ -193,15 +195,20 @@ public:
 
 		vector<int> prohibited_indexes;
 
-		// choose K distinct values for the centers of the clusters
+		// Scelta casuale dei centroidi iniziali
 		for(int i = 0; i < K; i++)
 		{
 			while(true)
 			{
 				int index_point = rand() % total_points;
-
+\
 				if(find(prohibited_indexes.begin(), prohibited_indexes.end(),
-						index_point) == prohibited_indexes.end())
+						index_point) == prohibited_indexes.end()) // La funzione find viene utilizzata 
+						// per cercare un elemento all'interno di una sequenza. Prende come argomenti due 
+						// iteratori che delimitano la sequenza e un valore da cercare. Restituisce un iteratore 
+						// che punta all'elemento trovato, se presente, o all'iteratore di fine sequenza se l'elemento 
+						// non è stato trovato.
+						
 				{
 					prohibited_indexes.push_back(index_point);
 					points[index_point].setCluster(i);
@@ -221,16 +228,16 @@ public:
 			// associates each point to the nearest center
 			for(int i = 0; i < total_points; i++)
 			{
-				int id_old_cluster = points[i].getCluster();
+				int id_old_cluster = points[i].getCluster(); // remind erano tutti a -1 all'inizio
 				int id_nearest_center = getIDNearestCenter(points[i]);
 
 				if(id_old_cluster != id_nearest_center)
 				{
 					if(id_old_cluster != -1)
-						clusters[id_old_cluster].removePoint(points[i].getID());
+						clusters[id_old_cluster].removePoint(points[i].getID()); // toglie dal cluster vecchio a patto che non si a -1 
 
-					points[i].setCluster(id_nearest_center);
-					clusters[id_nearest_center].addPoint(points[i]);
+					points[i].setCluster(id_nearest_center); // aggiorna il cluster del punto
+					clusters[id_nearest_center].addPoint(points[i]); // aggiorna l'elenco dei punti appartenenti al cluster
 					done = false;
 				}
 			}
@@ -247,7 +254,8 @@ public:
 					{
 						for(int p = 0; p < total_points_cluster; p++)
 							sum += clusters[i].getPoint(p).getValue(j);
-						clusters[i].setCentralValue(j, sum / total_points_cluster);
+						clusters[i].setCentralValue(j, sum / total_points_cluster); // piazza il valore dell feature
+						// j-esima del centroide del cluster i-esimo
 					}
 				}
 			}
@@ -293,7 +301,7 @@ public:
 
 int main(int argc, char *argv[])
 {
-	srand (time(NULL));
+	srand (time(NULL)); // inizializza il generatore di numeri casuali
 
 	int total_points, total_values, K, max_iterations, has_name;
 
