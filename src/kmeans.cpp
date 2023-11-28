@@ -301,9 +301,12 @@ public:
 
 int main(int argc, char *argv[])
 {
+
 	srand (time(NULL)); // inizializza il generatore di numeri casuali
 
 	int total_points, total_values, K, max_iterations, has_name;
+
+	cout << "Enter the number of cluster: "<<endl;
 
 	cin >> total_points >> total_values >> K >> max_iterations >> has_name;
 
