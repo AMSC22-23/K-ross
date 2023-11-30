@@ -8,7 +8,7 @@
 #include <time.h>
 #include <algorithm>
 
-#include "my_copy.hpp"
+#include "Kmeans.hpp"
 
 
 using namespace std;
@@ -326,7 +326,7 @@ int main(int argc, char *argv[])
 
 
 	// set K
-	int K = 16;
+	int K = 2;
 	// set max_iter
 	int max_iterations = 100;
 	// set total points

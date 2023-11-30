@@ -21,7 +21,7 @@ using namespace std;
 
 int read_leos(vector<Entry>& data) {
     // Open the CSV file
-    ifstream file("./Files/Precolombian.csv");
+    ifstream file("./Files/profiling.csv");
 
     if (!file.is_open()) {
         cerr << "Error opening the file." << endl;

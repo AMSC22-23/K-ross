@@ -1,3 +1,0 @@
-/home/leo/polimi/Kross/build/CMakeFiles/rebuild_cache.dir
-/home/leo/polimi/Kross/build/CMakeFiles/edit_cache.dir
-/home/leo/polimi/Kross/build/CMakeFiles/Kmeans.dir
