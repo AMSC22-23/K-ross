@@ -5,6 +5,8 @@
 #include <time.h>
 #include <algorithm>
 
+#include "gnuplot-iostream.h"
+
 #include "Kmeans.hpp"
 
 using namespace std;
