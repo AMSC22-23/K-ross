@@ -16,7 +16,7 @@ CXX = g++
 # -Wuninitialized warns about uninitialized variables.
 # -Wshadow warns about variable shadowing.
 # -Wconversion warns about implicit type conversions.
-CXXFLAGS = -std=c++20 -Wall -Wextra -Wpedantic -Wunused -Wuninitialized -Wshadow -Wconversion
+CXXFLAGS = -std=c++20 -I/usr/include/boost/
 
 # Build directory in the root
 BUILD_DIR = ./build

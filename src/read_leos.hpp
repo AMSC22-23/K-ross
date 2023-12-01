@@ -1,3 +1,7 @@
+#ifndef READ_LEOS_HPP
+#define READ_LEOS_HPP
+
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,3 +17,5 @@ struct Entry {
 
 int read_leos(vector<Entry>& data);
 
+
+#endif
