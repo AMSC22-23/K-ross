@@ -17,6 +17,7 @@ CXX = g++
 # -Wshadow warns about variable shadowing.
 # -Wconversion warns about implicit type conversions.
 CXXFLAGS = -std=c++20 -I/usr/include/boost/
+LDFLAGS += -lutil -lboost_iostreams -lboost_system -lboost_filesystem 
 
 # Build directory in the root
 BUILD_DIR = ./build
@@ -38,7 +39,7 @@ all: $(TARGET)
 
 # Rule to link the program
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 # Rule to compile source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
