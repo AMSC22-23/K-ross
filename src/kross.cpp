@@ -34,5 +34,7 @@ int main(int argc, char *argv[])
 	KMeans KM = KMeans(K, total_points, total_values, max_iterations);
 	KM.run(points);
 
+	
+
 	return 0;
 }

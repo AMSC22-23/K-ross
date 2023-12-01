@@ -31,6 +31,8 @@ public:
     void addValue(double value); // adds a value to the list of features
 
     string getName(); // returns the name of the point
+
+    vector<double> getValues();
 };
 
 

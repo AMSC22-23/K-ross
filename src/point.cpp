@@ -55,3 +55,8 @@ using namespace std;
 		return name;
 	}
 
+	vector<double> Point::getValues() // returns the vector of features
+	{
+		return values;
+	}
+

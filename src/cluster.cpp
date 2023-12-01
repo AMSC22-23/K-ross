@@ -66,3 +66,12 @@ using namespace std;
 	{
 		return id_cluster;
 	}
+
+	vector<vector<double>> Cluster::getPointsCoordinates()
+	{
+		vector<vector<double>> points_coordinates;
+		for (auto point : this->points)
+		{
+			points_coordinates.push_back(point.getValues());	
+		}
+	}

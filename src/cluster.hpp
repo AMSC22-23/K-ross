@@ -25,6 +25,7 @@ public:
     Point getPoint(int index);
     int getTotalPoints();
     int getID();
+    vector<vector<double>> getPointsCoordinates();
 };
 
 
