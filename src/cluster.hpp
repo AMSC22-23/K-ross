@@ -26,6 +26,7 @@ public:
     int getTotalPoints();
     int getID();
     vector<vector<double>> getPointsCoordinates();
+    vector<vector<double>> getCentralValueCoordinates();
 };
 
 

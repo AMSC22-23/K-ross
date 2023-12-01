@@ -162,28 +162,12 @@ using namespace std;
 			cout << "\n\n";
 		}
 
-
-		// debugging print
-		// let's print clusters[0].getPointsCoordinates()
-		cout << "debugging print" << endl;
-		cout << clusters[0].getPointsCoordinates()[0][0] << endl;
-		cout << clusters[0].getPointsCoordinates()[0][1] << endl;
-		cout << clusters[0].getPointsCoordinates()[1][0] << endl;
-		cout << clusters[0].getPointsCoordinates()[1][1] << endl;
-		cout << clusters[0].getPointsCoordinates()[2][0] << endl;
-		cout << clusters[0].getPointsCoordinates()[2][1] << endl;
-		cout << clusters[0].getPointsCoordinates()[3][0] << endl;
-		cout << clusters[0].getPointsCoordinates()[3][1] << endl;
-		cout << clusters[0].getPointsCoordinates()[4][0] << endl;
-		cout << clusters[0].getPointsCoordinates()[4][1] << endl;
-		
-
-
-
 		Gnuplot gp;
 		gp << "set xrange [20:70]\nset yrange [0:30]\n";
-		gp << "plot '-' with points title 'Cluster 1' pt 7 lc rgb 'blue', '-' with points title 'Cluster 2' pt 7 lc rgb 'red'\n";
+		gp << "plot '-' with points title 'Cluster 1' pt 6 lc rgb 'blue', '-' with points title 'Cluster 2' pt 6 lc rgb 'red', '-' with points pt 11 ps 3 lc rgb 'black', '-' with points pt 11 ps 3 lc rgb 'black'\n";
 		gp.send1d(clusters[0].getPointsCoordinates());
 		gp.send1d(clusters[1].getPointsCoordinates());
+		gp.send1d(clusters[0].getCentralValueCoordinates());
+		gp.send1d(clusters[1].getCentralValueCoordinates());
 		gp << "e\n";
 	}

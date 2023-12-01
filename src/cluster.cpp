@@ -46,6 +46,12 @@ using namespace std;
 	{
 		return central_values[index];
 	}
+	vector<vector<double>> Cluster::getCentralValueCoordinates() // returns the centroid of the cluster
+	{
+		vector<vector<double>> coordinates;
+		coordinates.push_back(central_values);
+		return coordinates;
+	}
 
 	void Cluster::setCentralValue(int index, double value) // sets the centroid of the cluster
 	{
