@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 	// set K
 	int K = 2;
 	// set max_iter
-	int max_iterations = 100;
+	int max_iterations = 10000;
 	// set total points
 	int total_points = points.size();
 	// set total values

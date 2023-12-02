@@ -18,6 +18,7 @@ using namespace std;
 	// return ID of nearest center (uses euclidean distance)
 	int KMeans::getIDNearestCenter(Point point) // returns the id of the nearest centroid to the given point
 	{
+		
 		double sum = 0.0, min_dist;
 		int id_cluster_center = 0;
 
@@ -61,7 +62,12 @@ using namespace std;
 	}
 
 	void KMeans::run(vector<Point> & points)
+	
 	{
+		// added by soldier for debugging purposes:
+		int kappa = 0;
+		
+
 		if(K > total_points)
 			return;
 
@@ -131,7 +137,13 @@ using namespace std;
 						clusters[i].setCentralValue(j, sum / total_points_cluster); // set the value of the j-th feature of the centroid of the i-th cluster
 					}
 				}
-				cout << "stampa" << endl;
+
+				// added by soldier for debugging purposes:
+				cout << "Iteration number: " << kappa << endl;
+				kappa++;
+
+				// added by Leo for debugging purposes:
+				// cout << "stampa" << endl;
 				gp << "plot '-' with points title 'Cluster 1' pt 7 lc rgb 'blue', '-' with points title 'Cluster 2' pt 7 lc rgb 'red', '-' with points pt 5 ps 2 lc rgb 'black', '-' with points pt 5 ps 2 lc rgb 'black'\n";
 				gp.send1d(clusters[0].getPointsCoordinates());
 				gp.send1d(clusters[1].getPointsCoordinates());

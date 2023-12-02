@@ -54,10 +54,12 @@ int read_leos(vector<Entry>& data) {
     }
 
     // Display the entries (optional)
+    /*
     cout << "ID\tF1\tF2\tName\n";
     for (const auto& entry : entries) {
         cout << entry.id << "\t" << entry.f1 << "\t" << entry.f2 << "\t" << entry.name << endl;
     }
+    */
 
     data = entries;
 

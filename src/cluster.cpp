@@ -76,7 +76,7 @@ using namespace std;
 	vector<vector<double>> Cluster::getPointsCoordinates()
 	{
 		vector<vector<double>> points_coordinates;
-		cout << "points_coordinates.size() ZACCANASTA= " << points_coordinates.size() << endl;
+		// cout << "points_coordinates.size() ZACCANASTA= " << points_coordinates.size() << endl;
 		for (auto point : this->points)
 		{
 			points_coordinates.push_back(point.getValues());	
