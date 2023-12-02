@@ -2,6 +2,10 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
+
+#include <chrono>
+#include <thread>
+
 #include "cluster.hpp"
 
 #include "kmeans.hpp"
@@ -63,6 +67,10 @@ using namespace std;
 
 		vector<int> prohibited_indexes;
 
+		Gnuplot gp;
+		gp << "set xrange [20:70]\nset yrange [0:30]\n";
+		
+
 		// Random selection of initial centroids
 		for(int i = 0; i < K; i++)
 		{
@@ -123,6 +131,14 @@ using namespace std;
 						clusters[i].setCentralValue(j, sum / total_points_cluster); // set the value of the j-th feature of the centroid of the i-th cluster
 					}
 				}
+				cout << "stampa" << endl;
+				gp << "plot '-' with points title 'Cluster 1' pt 7 lc rgb 'blue', '-' with points title 'Cluster 2' pt 7 lc rgb 'red', '-' with points pt 5 ps 2 lc rgb 'black', '-' with points pt 5 ps 2 lc rgb 'black'\n";
+				gp.send1d(clusters[0].getPointsCoordinates());
+				gp.send1d(clusters[1].getPointsCoordinates());
+				gp.send1d(clusters[0].getCentralValueCoordinates());
+				gp.send1d(clusters[1].getCentralValueCoordinates());
+				std::chrono::milliseconds duration(300);
+    			std::this_thread::sleep_for(duration);
 			}
 
 			if(done == true || iter >= max_iterations)
@@ -130,7 +146,7 @@ using namespace std;
 				cout << "Break in iteration " << iter << "\n\n";
 				break;
 			}
-
+			
 			iter++;
 		}
 
@@ -162,12 +178,12 @@ using namespace std;
 			cout << "\n\n";
 		}
 
-		Gnuplot gp;
-		gp << "set xrange [20:70]\nset yrange [0:30]\n";
-		gp << "plot '-' with points title 'Cluster 1' pt 6 lc rgb 'blue', '-' with points title 'Cluster 2' pt 6 lc rgb 'red', '-' with points pt 11 ps 3 lc rgb 'black', '-' with points pt 11 ps 3 lc rgb 'black'\n";
-		gp.send1d(clusters[0].getPointsCoordinates());
-		gp.send1d(clusters[1].getPointsCoordinates());
-		gp.send1d(clusters[0].getCentralValueCoordinates());
-		gp.send1d(clusters[1].getCentralValueCoordinates());
-		gp << "e\n";
+		// Gnuplot gp;
+		// gp << "set xrange [20:70]\nset yrange [0:30]\n";
+		// gp << "plot '-' with points title 'Cluster 1' pt 6 lc rgb 'blue', '-' with points title 'Cluster 2' pt 6 lc rgb 'red', '-' with points pt 11 ps 3 lc rgb 'black', '-' with points pt 11 ps 3 lc rgb 'black'\n";
+		// gp.send1d(clusters[0].getPointsCoordinates());
+		// gp.send1d(clusters[1].getPointsCoordinates());
+		// gp.send1d(clusters[0].getCentralValueCoordinates());
+		// gp.send1d(clusters[1].getCentralValueCoordinates());
+		// gp << "e\n";
 	}
