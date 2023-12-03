@@ -35,7 +35,7 @@ SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
 
 # Default target
-all: $(TARGET)
+all: builddir $(TARGET) 
 
 # Rule to link the program
 $(TARGET): $(OBJS)
@@ -51,3 +51,11 @@ clean:
 
 # 
 .PHONY: all clean
+
+builddir: | $(BUILD_DIR)
+
+$(BUILD_DIR): 
+	mkdir -p $@
+
+
+
