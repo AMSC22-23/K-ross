@@ -138,10 +138,6 @@ using namespace std;
 					}
 				}
 
-				// added by soldier for debugging purposes:
-				cout << "Iteration number: " << kappa << endl;
-				kappa++;
-
 				// added by Leo for debugging purposes:
 				// cout << "stampa" << endl;
 				gp << "plot '-' with points title 'Cluster 1' pt 7 lc rgb 'blue', '-' with points title 'Cluster 2' pt 7 lc rgb 'red', '-' with points pt 5 ps 2 lc rgb 'black', '-' with points pt 5 ps 2 lc rgb 'black'\n";
@@ -152,7 +148,7 @@ using namespace std;
 				std::chrono::milliseconds duration(300);
     			std::this_thread::sleep_for(duration);
 			}
-
+			cout << "Iteration number: " << iter << endl;
 			if(done == true || iter >= max_iterations)
 			{
 				cout << "Break in iteration " << iter << "\n\n";
