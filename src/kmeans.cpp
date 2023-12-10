@@ -129,7 +129,14 @@ using namespace std;
 //---------------------------------------------------------------------------------
 
 			std::string gnuplotcommand = "plot";
-			std::string color;
+			
+//---------------------Da NON runnare in paralllo----------------------------------
+//---------------------------------------------------------------------------------
+
+			// ciclo per definire gnuplot command
+			for(int i = 0; i < K; i++)
+			{
+				std::string color;
 				switch (i) {
 					case 0:
 						color = "red";
@@ -161,12 +168,6 @@ using namespace std;
 						break;
 				}
 
-//---------------------Da NON runnare in paralllo----------------------------------
-//---------------------------------------------------------------------------------
-
-			// ciclo per definire gnuplot command
-			for(int i = 0; i < K; i++)
-			{
 				if(i != 0)
 					gnuplotcommand += ",";
 				gnuplotcommand += " '-' with points title 'Cluster ";
