@@ -2,6 +2,13 @@
 
 using namespace std;
 
+#ifdef PARALELL_VERSION
+int main() {
+	cout << "PARALELL_VERSION: Madonna Puttana" << endl;
+}
+
+#else
+
 int main(int argc, char *argv[])
 {
 	srand (time(NULL)); // initialize the random number generator
@@ -46,3 +53,6 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
+
+
+#endif
