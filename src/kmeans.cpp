@@ -77,6 +77,9 @@ using namespace std;
 		gp << "set xrange [20:70]\nset yrange [0:30]\n";
 		
 
+//---------------------Da runnare in paralllo--------------------------------------
+//---------------------------------------------------------------------------------
+		
 		// Random selection of initial centroids
 		for(int i = 0; i < K; i++)
 		{
@@ -98,13 +101,15 @@ using namespace std;
 				}
 			}
 		}
-
+//---------------------------------------------------------------------------------
 		int iter = 1;
 
 		while(true)
 		{
 			bool done = true;
 
+//---------------------Da NON runnare in paralllo----------------------------------
+//---------------------------------------------------------------------------------
 			// Associates each point to the nearest center
 			for(int i = 0; i < total_points; i++)
 			{
@@ -121,11 +126,10 @@ using namespace std;
 					done = false;
 				}
 			}
+//---------------------------------------------------------------------------------
+
 			std::string gnuplotcommand = "plot";
-			// Recalculating the center of each cluster
-			for(int i = 0; i < K; i++)
-			{
-				std::string color;
+			std::string color;
 				switch (i) {
 					case 0:
 						color = "red";
@@ -156,6 +160,13 @@ using namespace std;
 						color = "Unknown";
 						break;
 				}
+
+//---------------------Da NON runnare in paralllo----------------------------------
+//---------------------------------------------------------------------------------
+
+			// ciclo per definire gnuplot command
+			for(int i = 0; i < K; i++)
+			{
 				if(i != 0)
 					gnuplotcommand += ",";
 				gnuplotcommand += " '-' with points title 'Cluster ";
@@ -169,9 +180,20 @@ using namespace std;
 				else {
 					gnuplotcommand += ", '-' with points notitle pt 5 ps 2 lc rgb 'black'";
 				}
-
 				if(i == K-1)
 					gnuplotcommand += "\n";
+			}
+			gp<<gnuplotcommand;
+//---------------------------------------------------------------------------------
+
+
+//---------------------Da runnare in paralllo--------------------------------------
+//---------------------------------------------------------------------------------
+
+			// Recalculating the center of each cluster
+			for(int i = 0; i < K; i++)
+			{
+							
 				for(int j = 0; j < total_values; j++)
 				{
 					int total_points_cluster = clusters[i].getTotalPoints();
@@ -184,18 +206,12 @@ using namespace std;
 						clusters[i].setCentralValue(j, sum / total_points_cluster); // set the value of the j-th feature of the centroid of the i-th cluster
 					}
 				}
-			}
-			// added by Leo for debugging purposes:
-			// cout << "stampa" << endl;
-
-			gp<<gnuplotcommand;
-			for(int i = 0; i < K; i++)
-			{
 				gp.send1d(clusters.at(i).getPointsCoordinates());
 				gp.send1d(clusters.at(i).getCentralValueCoordinates());
-				// gp.send1d(clusters.at(1).getPointsCoordinates());
-				// gp.send1d(clusters.at(1).getCentralValueCoordinates());
 			}
+//---------------------------------------------------------------------------------
+
+
 			std::chrono::milliseconds duration(300);
 			std::this_thread::sleep_for(duration);
 			cout << "Iteration number: " << iter << endl;
