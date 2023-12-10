@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 	int K;
 	cout << "Please enter the number of clusters: ";
 	std::cin >> K;
-	if(K <= 0 || K > 8)
+	while(K <= 0 || K > 8)
 	{
 		cout << "The number of clusters must be greater than 0 and below 8" << endl;
 		cout << "Please enter the number of clusters: ";
