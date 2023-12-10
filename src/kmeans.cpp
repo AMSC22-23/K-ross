@@ -158,6 +158,7 @@ using namespace std;
 			iter++;
 		}
 
+/*
 		// Shows elements of clusters
 		for(int i = 0; i < K; i++)
 		{
@@ -185,6 +186,9 @@ using namespace std;
 
 			cout << "\n\n";
 		}
+
+
+*/
 
 		// Gnuplot gp;
 		// gp << "set xrange [20:70]\nset yrange [0:30]\n";
