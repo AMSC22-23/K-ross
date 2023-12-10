@@ -22,7 +22,15 @@ int main(int argc, char *argv[])
 	}
 
 	// set K
-	int K = 2;
+	int K;
+	cout << "Please enter the number of clusters: ";
+	std::cin >> K;
+	if(K <= 0 || K > 8)
+	{
+		cout << "The number of clusters must be greater than 0 and below 8" << endl;
+		cout << "Please enter the number of clusters: ";
+		std::cin >> K;
+	}
 	// set max_iter
 	int max_iterations = 10000;
 	// set total points

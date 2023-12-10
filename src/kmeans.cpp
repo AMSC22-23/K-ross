@@ -2,6 +2,8 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
+#include <string>
+#include <cmath>
 
 #include <chrono>
 #include <thread>
@@ -12,9 +14,7 @@
 #include "gnuplot-iostream.h"
 
 using namespace std; 
-
-
-
+	
 	// return ID of nearest center (uses euclidean distance)
 	int KMeans::getIDNearestCenter(Point point) // returns the id of the nearest centroid to the given point
 	{
@@ -121,10 +121,52 @@ using namespace std;
 					done = false;
 				}
 			}
-			
+			std::string gnuplotcommand = "plot";
 			// Recalculating the center of each cluster
 			for(int i = 0; i < K; i++)
 			{
+				std::string color;
+				switch (i) {
+					case 0:
+						color = "red";
+						break;
+					case 1:
+						color = "blue";
+						break;
+					case 2:
+						color = "green";
+						break;
+					case 3:
+						color = "purple";
+						break;
+					case 4:
+						color = "cyan";
+						break;
+					case 5:
+						color = "brown";
+						break;
+					case 6:
+						color = "yellow";
+						break;
+					case 7:
+						color = "orange";
+						break;
+
+					default:
+						color = "Unknown";
+						break;
+				}
+				if(i != 0)
+					gnuplotcommand += ",";
+				gnuplotcommand += " '-' with points title 'Cluster ";
+				gnuplotcommand += std::to_string(i+1);
+				gnuplotcommand += "' pt 7 lc rgb '";
+				gnuplotcommand += color;
+				gnuplotcommand += "'";
+				gnuplotcommand += ", '-' with points pt 5 ps 2 lc rgb 'black'";
+
+				if(i == K-1)
+					gnuplotcommand += "\n";
 				for(int j = 0; j < total_values; j++)
 				{
 					int total_points_cluster = clusters[i].getTotalPoints();
@@ -140,11 +182,15 @@ using namespace std;
 			}
 			// added by Leo for debugging purposes:
 			// cout << "stampa" << endl;
-			gp << "plot '-' with points title 'Cluster 1' pt 7 lc rgb 'blue', '-' with points title 'Cluster 2' pt 7 lc rgb 'red', '-' with points pt 5 ps 2 lc rgb 'black', '-' with points pt 5 ps 2 lc rgb 'black'\n";
-			gp.send1d(clusters[0].getPointsCoordinates());
-			gp.send1d(clusters[1].getPointsCoordinates());
-			gp.send1d(clusters[0].getCentralValueCoordinates());
-			gp.send1d(clusters[1].getCentralValueCoordinates());
+
+			gp<<gnuplotcommand;
+			for(int i = 0; i < K; i++)
+			{
+				gp.send1d(clusters.at(i).getPointsCoordinates());
+				gp.send1d(clusters.at(i).getCentralValueCoordinates());
+				// gp.send1d(clusters.at(1).getPointsCoordinates());
+				// gp.send1d(clusters.at(1).getCentralValueCoordinates());
+			}
 			std::chrono::milliseconds duration(300);
 			std::this_thread::sleep_for(duration);
 			cout << "Iteration number: " << iter << endl;
