@@ -163,7 +163,12 @@ using namespace std;
 				gnuplotcommand += "' pt 7 lc rgb '";
 				gnuplotcommand += color;
 				gnuplotcommand += "'";
-				gnuplotcommand += ", '-' with points title 'Centroid' pt 5 ps 2 lc rgb 'black'";
+				if(i==K-1){
+					gnuplotcommand += ", '-' with points title 'Centroids' pt 5 ps 2 lc rgb 'black'";
+				}
+				else {
+					gnuplotcommand += ", '-' with points notitle pt 5 ps 2 lc rgb 'black'";
+				}
 
 				if(i == K-1)
 					gnuplotcommand += "\n";
