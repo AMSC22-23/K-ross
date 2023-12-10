@@ -4,7 +4,7 @@ using namespace std;
 
 #ifdef PARALELL_VERSION
 int main() {
-	cout << "PARALELL_VERSION: Madonna Puttana" << endl;
+	cout << "PARALELL_VERSION" << endl;
 }
 
 #else
