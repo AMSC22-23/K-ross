@@ -77,6 +77,9 @@ using namespace std;
 		gp << "set xrange [20:70]\nset yrange [0:30]\n";
 		
 
+//---------------------Da runnare in paralllo--------------------------------------
+//---------------------------------------------------------------------------------
+		
 		// Random selection of initial centroids
 		for(int i = 0; i < K; i++)
 		{
@@ -98,12 +101,13 @@ using namespace std;
 				}
 			}
 		}
-
+//---------------------------------------------------------------------------------
 		int iter = 1;
 
 		while(true)
 		{
 			bool done = true;
+
 //---------------------Da NON runnare in paralllo----------------------------------
 //---------------------------------------------------------------------------------
 			// Associates each point to the nearest center
@@ -156,8 +160,11 @@ using namespace std;
 						color = "Unknown";
 						break;
 				}
-			// ciclo per definire gnuplot command
 
+//---------------------Da NON runnare in paralllo----------------------------------
+//---------------------------------------------------------------------------------
+
+			// ciclo per definire gnuplot command
 			for(int i = 0; i < K; i++)
 			{
 				if(i != 0)
@@ -177,12 +184,13 @@ using namespace std;
 					gnuplotcommand += "\n";
 			}
 			gp<<gnuplotcommand;
-
-			// Recalculating the center of each cluster
+//---------------------------------------------------------------------------------
 
 
 //---------------------Da runnare in paralllo--------------------------------------
 //---------------------------------------------------------------------------------
+
+			// Recalculating the center of each cluster
 			for(int i = 0; i < K; i++)
 			{
 							
