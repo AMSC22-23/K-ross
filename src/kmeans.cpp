@@ -121,7 +121,7 @@ using namespace std;
 					done = false;
 				}
 			}
-
+			
 			// Recalculating the center of each cluster
 			for(int i = 0; i < K; i++)
 			{
