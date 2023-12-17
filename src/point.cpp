@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 #include "point.hpp"
 
@@ -11,9 +12,9 @@ using namespace std;
 	Point::Point(int id_point, vector<double>& values, string name) // constructor
 	{
 		this->id_point = id_point;
-		total_values = values.size(); // allocate the correct number of features
+		number_of_features = values.size(); // allocate the correct number of features
 
-		for(int i = 0; i < total_values; i++)
+		for(int i = 0; i < number_of_features; i++)
 			this->values.push_back(values[i]); // copy the values of the features
 
 		this->name = name;
@@ -25,9 +26,9 @@ using namespace std;
 		return id_point;
 	}
 
-	void Point::setCluster(int id_cluster) // assigns the point to the cluster with the given id
+	void Point::setCluster(int id) // assigns the point to the cluster with the given id
 	{
-		this->id_cluster = id_cluster;
+		this->id_cluster = id;
 	}
 
 	int Point::getCluster() // returns the id of the cluster to which the point belongs
@@ -40,9 +41,9 @@ using namespace std;
 		return values[index];
 	}
 
-	int Point::getTotalValues() // returns the number of features
+	int Point::getNumberOfFeatures() // returns the number of features
 	{
-		return total_values;
+		return number_of_features;
 	}
 
 	void Point::addValue(double value) // adds a value to the list of features
@@ -58,5 +59,25 @@ using namespace std;
 	vector<double> Point::getValues() // returns the vector of features
 	{
 		return values;
+	}
+
+	vector<vector<double>> Point::getPointsCoordinates(){
+		vector<vector<double>> points_coordinates;
+		vector<double> point_coordinates;
+		for(int j = 0; j < number_of_features; j++)
+			point_coordinates.push_back(values[j]);
+		points_coordinates.push_back(point_coordinates);
+		return points_coordinates;
+	}
+
+	void Point::setValue(int index, double value){
+		values[index] = value;
+	}
+
+	double Point::euclidianDistanceBetweenPoints(Point point1, Point point2){
+		double sum = 0.0;
+		for(int i = 0; i < point1.getNumberOfFeatures(); i++)
+			sum += pow(point1.getValue(i) - point2.getValue(i), 2.0);
+		return sqrt(sum);
 	}
 

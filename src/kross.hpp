@@ -10,9 +10,9 @@
 #include <algorithm>
 
 // CLASSES
-#include "cluster.hpp"
 #include "kmeans.hpp"
 #include "point.hpp"
+#include "points_vect.hpp"
 
 // FUNCTIONS
 #include "read_leos.hpp"

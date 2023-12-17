@@ -8,133 +8,87 @@
 #include <chrono>
 #include <thread>
 
-#include "cluster.hpp"
-
 #include "kmeans.hpp"
-#include "gnuplot-iostream.h"
+
 
 using namespace std; 
-	
-	// return ID of nearest center (uses euclidean distance)
-	int KMeans::getIDNearestCenter(Point point) // returns the id of the nearest centroid to the given point
-	{
-		
-		double sum = 0.0, min_dist;
-		int id_cluster_center = 0;
 
-		for(int i = 0; i < total_values; i++) // for each feature of the point
-		{
-			sum += pow(clusters[0].getCentralValue(i) -
-					   point.getValue(i), 2.0);
-		}
-
-		min_dist = sqrt(sum);
-
-		for(int i = 1; i < K; i++)
-		{
-			double dist;
-			sum = 0.0;
-
-			for(int j = 0; j < total_values; j++)
-			{
-				sum += pow(clusters[i].getCentralValue(j) -
-						   point.getValue(j), 2.0);
-			}
-
-			dist = sqrt(sum);
-
-			if(dist < min_dist)
-			{
-				min_dist = dist; // update the minimum distance with the one from the centroid it is working with
-				id_cluster_center = i;
-			}
-		}
-
-		return id_cluster_center;
-	}
-
-	KMeans::KMeans(int K, int total_points, int total_values, int max_iterations)
+	KMeans::KMeans(int K, int number_of_points, int number_of_features, int max_iterations)
 	{
 		this->K = K;
-		this->total_points = total_points;
-		this->total_values = total_values;
+		this->number_of_points = number_of_points;
+		this->number_of_features = number_of_features;
 		this->max_iterations = max_iterations;
 	}
 
-	void KMeans::run(vector<Point> & points)
-	
+	int KMeans::getIDNearestCenter(Point point) // returns the id of the nearest centroid to the given point
 	{
-		// added by soldier for debugging purposes:
-		int kappa = 0;
-		
+		double min_dist = 0.0;
+		int id_cluster_center = 0;
 
-		if(K > total_points)
-			return;
+		for (int i = 0; i < K; i++) {
+			double dist = point.euclidianDistanceBetweenPoints(point, clusters[i].getCentroid());
+			if (i == 0) {
+				min_dist = dist;
+			}
+			else {
+				if (dist < min_dist) {
+					min_dist = dist;
+					id_cluster_center = i;
+				}
+			}
+		}
+		return id_cluster_center;
+	}
 
+	void KMeans::selectRandomCentroids(Points_vect & all_points) // parallelizzabile
+	{
 		vector<int> prohibited_indexes;
-
-		Gnuplot gp;
-		gp << "set xrange [20:70]\nset yrange [0:30]\n";
-		
-
-//---------------------Da runnare in paralllo--------------------------------------
-//---------------------------------------------------------------------------------
-		
-		// Random selection of initial centroids
-		for(int i = 0; i < K; i++)
+		for (int i = 0 ; i < K ; i++)
 		{
-			while(true)
+			while (true)
 			{
-				int index_point = rand() % total_points;
-
-				// The find function is used to search for an element within a sequence. 
-				// It takes as arguments two iterators that delimit the sequence and a value to search for.
-				// It returns an iterator pointing to the found element, if present, or to the end iterator of the sequence if the element was not found.
-				if(find(prohibited_indexes.begin(), prohibited_indexes.end(),
-						index_point) == prohibited_indexes.end()) 
+				int index_point = rand() % number_of_points;
+				if(find(prohibited_indexes.begin(), prohibited_indexes.end(), index_point) == prohibited_indexes.end()) 
 				{
 					prohibited_indexes.push_back(index_point);
-					points[index_point].setCluster(i);
-					Cluster cluster(i, points[index_point]);
+					all_points.getPoint(index_point).setCluster(i);
+					Cluster cluster(i, all_points.getPoint(index_point));
 					clusters.push_back(cluster);
 					break;
 				}
 			}
 		}
-//---------------------------------------------------------------------------------
-		int iter = 1;
+	}
 
-		while(true)
+	void KMeans::associatePointsToClusters(Points_vect & all_points) // the function returns true if the assignment of points to clusters has changed from the previous iteration
+	{
+		changed = false;
+
+		for(int i = 0 ; i < number_of_points ; i++)
 		{
-			bool done = true;
-
-//---------------------Da NON runnare in paralllo----------------------------------
-//---------------------------------------------------------------------------------
-			// Associates each point to the nearest center
-			for(int i = 0; i < total_points; i++)
+			int old_cluster = all_points.getPoint(i).getCluster();
+			int nearest_cluster = getIDNearestCenter(all_points.getPoint(i));
+			if (old_cluster != nearest_cluster)
 			{
-				int id_old_cluster = points[i].getCluster(); // remember they were all -1 at the beginning
-				int id_nearest_center = getIDNearestCenter(points[i]);
-
-				if(id_old_cluster != id_nearest_center)
-				{
-					if(id_old_cluster != -1)
-						clusters[id_old_cluster].removePoint(points[i].getID()); // remove from the old cluster as long as it is not -1
-
-					points[i].setCluster(id_nearest_center); // update the cluster of the point
-					clusters[id_nearest_center].addPoint(points[i]); // update the list of points belonging to the cluster
-					done = false;
-				}
+				cout << "Point " << i + 1 << " changed cluster from " << old_cluster + 1 << " to " << nearest_cluster + 1 << endl;
+				if(old_cluster != -1)
+					clusters[old_cluster].removePointFromCluster(all_points.getPoint(i).getID());
+				all_points.getPoint(i).setCluster(nearest_cluster);
+				cout << "---->" << nearest_cluster << endl;
+				cout << "--->" << all_points.getPoint(i).getCluster() << endl;
+				clusters[nearest_cluster].addPoint(all_points.getPoint(i));
+				changed = true;
 			}
-//---------------------------------------------------------------------------------
+		}
+	}
 
-			std::string gnuplotcommand = "plot";
-			
-//---------------------Da NON runnare in paralllo----------------------------------
-//---------------------------------------------------------------------------------
-
-			// ciclo per definire gnuplot command
-			for(int i = 0; i < K; i++)
+	void KMeans::setplotIntruction(int number_of_clusters)
+	{
+		if(number_of_clusters > 8)
+			return;
+		std::string gnuplotcommand = "plot";
+		for(int i = 0; i < K; i++)
 			{
 				std::string color;
 				switch (i) {
@@ -151,7 +105,7 @@ using namespace std;
 						color = "purple";
 						break;
 					case 4:
-						color = "cyan";
+						color = "pink";
 						break;
 					case 5:
 						color = "brown";
@@ -184,58 +138,34 @@ using namespace std;
 				if(i == K-1)
 					gnuplotcommand += "\n";
 			}
-			gp<<gnuplotcommand;
-//---------------------------------------------------------------------------------
-
-
-//---------------------Da runnare in paralllo--------------------------------------
-//---------------------------------------------------------------------------------
-
-			// Recalculating the center of each cluster
-			for(int i = 0; i < K; i++)
-			{
-							
-				for(int j = 0; j < total_values; j++)
-				{
-					int total_points_cluster = clusters[i].getTotalPoints();
-					double sum = 0.0;
-
-					if(total_points_cluster > 0)
-					{
-						for(int p = 0; p < total_points_cluster; p++)
-							sum += clusters[i].getPoint(p).getValue(j);
-						clusters[i].setCentralValue(j, sum / total_points_cluster); // set the value of the j-th feature of the centroid of the i-th cluster
-					}
-				}
-				gp.send1d(clusters.at(i).getPointsCoordinates());
-				gp.send1d(clusters.at(i).getCentralValueCoordinates());
-			}
-//---------------------------------------------------------------------------------
-
-
-			std::chrono::milliseconds duration(300);
-			std::this_thread::sleep_for(duration);
-			cout << "Iteration number: " << iter << endl;
-			if(done == true || iter >= max_iterations)
-			{
-				cout << "Break in iteration " << iter << "\n\n";
-				break;
-			}
-			
-			iter++;
-		}
-
-/*
-		// Shows elements of clusters
+			Gnuplot gp;
+			gp << "set xrange [20:70]\nset yrange [0:30]\n";
+			plotInstruction = gnuplotcommand;
+	}
+	
+	void KMeans::plotClusters(int number_of_clusters)
+	{
+		if(number_of_clusters > 8)
+			return;
+		gp << plotInstruction;
 		for(int i = 0; i < K; i++)
 		{
-			int total_points_cluster =  clusters[i].getTotalPoints();
+			gp.send1d(clusters.at(i).getClusterPointsCoordinates());
+			gp.send1d(clusters.at(i).getCentroidCoordinates());
+		}
+		std::chrono::milliseconds duration(300); //timer to visualize the animation
+		std::this_thread::sleep_for(duration);
+	}
 
+	void KMeans::printClusters()
+	{
+		for(int i = 0; i < K; i++)
+		{
 			cout << "Cluster " << clusters[i].getID() + 1 << endl;
-			for(int j = 0; j < total_points_cluster; j++)
+			for(int j = 0; j < clusters[i].getTotalPoints(); j++)
 			{
 				cout << "Point " << clusters[i].getPoint(j).getID() + 1 << ": ";
-				for(int p = 0; p < total_values; p++)
+				for(int p = 0; p < number_of_features; p++)
 					cout << clusters[i].getPoint(j).getValue(p) << " ";
 
 				string point_name = clusters[i].getPoint(j).getName();
@@ -248,21 +178,58 @@ using namespace std;
 
 			cout << "Cluster values: ";
 
-			for(int j = 0; j < total_values; j++)
-				cout << clusters[i].getCentralValue(j) << " ";
+			for(int j = 0; j < number_of_features; j++)
+				cout << clusters[i].getCentroid().getValue(j) << " ";
 
 			cout << "\n\n";
 		}
+	}
 
+	void KMeans::calculateCentroids()
+	{
+		for(int i = 0; i < K; i++)
+		{
+			for(int j = 0; j < number_of_features; j++)
+			{
+				int total_points_cluster = clusters.at(i).getTotalPoints();
+				double sum = 0.0;
 
-*/
+				if(total_points_cluster > 0)
+				{
+					for(int p = 0; p < total_points_cluster; p++)
+						sum += clusters[i].getPoint(p).getValue(j);
+					clusters[i].setCentroid(j, sum / total_points_cluster);
+				}
+			}
+		}
+	}
 
-		// Gnuplot gp;
-		// gp << "set xrange [20:70]\nset yrange [0:30]\n";
-		// gp << "plot '-' with points title 'Cluster 1' pt 6 lc rgb 'blue', '-' with points title 'Cluster 2' pt 6 lc rgb 'red', '-' with points pt 11 ps 3 lc rgb 'black', '-' with points pt 11 ps 3 lc rgb 'black'\n";
-		// gp.send1d(clusters[0].getPointsCoordinates());
-		// gp.send1d(clusters[1].getPointsCoordinates());
-		// gp.send1d(clusters[0].getCentralValueCoordinates());
-		// gp.send1d(clusters[1].getCentralValueCoordinates());
-		// gp << "e\n";
+	void KMeans::run(Points_vect & all_points)
+	{
+		if(K > number_of_points)
+			return;
+		selectRandomCentroids(all_points);
+
+		cout<<"Centroids initialized"<<endl;
+
+		changed = true;
+		int iter = 1;
+
+		setplotIntruction(K);
+
+		while(changed && iter < max_iterations)
+		{
+			cout << "Iteration: " << iter << endl;
+
+			associatePointsToClusters(all_points);
+
+			calculateCentroids();
+
+			plotClusters(K);
+
+			iter++;
+		}
+		printClusters();
+
+		std::cout << "The algorithm converged after " << iter << " iterations." << std::endl;
 	}

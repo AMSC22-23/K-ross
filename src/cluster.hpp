@@ -1,10 +1,7 @@
-#ifndef CLUSTER_HPP
-#define CLUSTER_HPP
-
-
 #include <iostream>
 #include <vector>
 #include "point.hpp"
+#include "points_vect.hpp"
 
 using namespace std;
 
@@ -12,22 +9,20 @@ using namespace std;
 class Cluster
 {
 private:
-    int id_cluster; // id of the cluster
-    vector<double> central_values; // centroid of the cluster
-    vector<Point> points; // points belonging to the cluster
+    int id_cluster = -1; // id of the cluster
+    Point centroid; // centroid of the cluster
+    Points_vect cluster_points; // points belonging to the cluster
 
 public:
-    Cluster(int id_cluster, Point point);
+    Cluster(int id_cluster, Point newCentroid);
+    Cluster() = default;
     void addPoint(Point point);
-    bool removePoint(int id_point);
-    double getCentralValue(int index);
-    void setCentralValue(int index, double value);
+    void removePointFromCluster(int id_point);
+    Point getCentroid();
+    void setCentroid(int index, double value);
     Point getPoint(int index);
     int getTotalPoints();
     int getID();
-    vector<vector<double>> getPointsCoordinates();
-    vector<vector<double>> getCentralValueCoordinates();
+    vector<vector<double>> getClusterPointsCoordinates();
+    vector<vector<double>> getCentroidCoordinates();
 };
-
-
-#endif

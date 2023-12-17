@@ -2,13 +2,6 @@
 
 using namespace std;
 
-#ifdef PARALELL_VERSION
-int main() {
-	cout << "PARALELL_VERSION" << endl;
-}
-
-#else
-
 int main(int argc, char *argv[])
 {
 	srand (time(NULL)); // initialize the random number generator
@@ -18,41 +11,44 @@ int main(int argc, char *argv[])
 	read_leos(data);
 
 	// construct class
-	vector<Point> points;
-
+	Points_vect all_points;
+	int count=0;
 	for(auto& row : data )
 	{
+		cout << "Point " << count << endl;
 		vector<double> values;
 		values.push_back(row.f1);
 		values.push_back(row.f2);
-		points.push_back(Point(row.id, values, row.name));
+		all_points.addPoint(Point(row.id, values, row.name));
+		count++;
 	}
+	// set max_iter
+	int max_iterations = 10000;
+
+	// set total points
+	int total_points = all_points.getNumberOfPoints();
+
+	// set total values
+	int total_values = all_points.getPoint(0).getNumberOfFeatures();
 
 	// set K
 	int K;
 	cout << "Please enter the number of clusters: ";
-	std::cin >> K;
-	while(K <= 0 || K > 8)
+	cin >> K;
+	cout<< K << endl;
+	
+	while(K <= 0 || K > total_points)
 	{
-		cout << "The number of clusters must be greater than 0 and below 8" << endl;
+		cout << "The number of clusters must be greater than 0 and below the number of points" << endl;
 		cout << "Please enter the number of clusters: ";
-		std::cin >> K;
+		cin >> K;
 	}
-	// set max_iter
-	int max_iterations = 10000;
-	// set total points
-	int total_points = points.size();
-	// set total values
-	int total_values = points[0].getTotalValues();
 	
 	// call method to execute k-means
 	KMeans KM = KMeans(K, total_points, total_values, max_iterations);
-	KM.run(points);
+	KM.run(all_points);
 
 	
 
 	return 0;
 }
-
-
-#endif

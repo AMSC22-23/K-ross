@@ -1,71 +1,56 @@
 #include <iostream>
 #include <vector>
-#include "point.hpp"
-
 #include "cluster.hpp"
 
 
 using namespace std;
 
 
-	Cluster::Cluster(int id_cluster, Point point) // constructor
+	Cluster::Cluster(int newid_cluster, Point newCentroid)
 	{
-		this->id_cluster = id_cluster;
+		id_cluster = newid_cluster;
 
-		int total_values = point.getTotalValues(); // number of features of the point
+		int total_values = newCentroid.getNumberOfFeatures(); 
 
 		for(int i = 0; i < total_values; i++)
-			central_values.push_back(point.getValue(i)); // set the centroid of the cluster with the values of the point
-
-		points.push_back(point); // add the point to the list of points belonging to the cluster
-	}
-
-	void Cluster::addPoint(Point point) // adds a point to the list of points belonging to the cluster
-	{
-		points.push_back(point);
-	}
-
-	// cluster.removePoint(point_id)
-
-	bool Cluster::removePoint(int id_point) // removes a point from the list of points belonging to the cluster
-	{
-		int total_points = points.size();
-
-		for(int i = 0; i < total_points; i++)
 		{
-			if(points[i].getID() == id_point)
-			{
-				points.erase(points.begin() + i);
-				return true;
-			}
+			centroid = newCentroid;
 		}
-		return false;
+		cluster_points.addPoint(newCentroid); //!!!
 	}
 
-	double Cluster::getCentralValue(int index) // returns the centroid of the cluster
+	void Cluster::addPoint(Point point)
 	{
-		return central_values[index];
-	}
-	vector<vector<double>> Cluster::getCentralValueCoordinates() // returns the centroid of the cluster
-	{
-		vector<vector<double>> coordinates;
-		coordinates.push_back(central_values);
-		return coordinates;
+		cluster_points.addPoint(point);
 	}
 
-	void Cluster::setCentralValue(int index, double value) // sets the centroid of the cluster
+	void Cluster::removePointFromCluster(int id_point) // removes a point from the list of points belonging to the cluster
 	{
-		central_values[index] = value;
+		cluster_points.removePoint(id_point);
+	}
+
+	Point Cluster::getCentroid() // returns the centroid of the cluster
+	{
+		return centroid;
+	}
+	vector<vector<double>> Cluster::getCentroidCoordinates() // returns the centroid of the cluster
+	{
+		return centroid.getPointsCoordinates();
+	}
+
+	void Cluster::setCentroid(int index, double value) // sets the centroid of the cluster
+	{
+		centroid.setValue(index, value);
 	}
 
 	Point Cluster::getPoint(int index) // returns the point from the vector with the given index
 	{
-		return points[index];
+		return cluster_points.getPoint(index);
 	}
 
 	int Cluster::getTotalPoints() // returns the number of points belonging to the cluster
 	{
-		return points.size();
+		return cluster_points.getNumberOfPoints();
 	}
 
 	int Cluster::getID() // returns the id of the cluster
@@ -73,14 +58,7 @@ using namespace std;
 		return id_cluster;
 	}
 
-	vector<vector<double>> Cluster::getPointsCoordinates()
+	vector<vector<double>> Cluster::getClusterPointsCoordinates()
 	{
-		vector<vector<double>> points_coordinates;
-		// cout << "points_coordinates.size() ZACCANASTA= " << points_coordinates.size() << endl;
-		for (auto point : this->points)
-		{
-			points_coordinates.push_back(point.getValues());	
-		}
-
-		return points_coordinates;
+		return cluster_points.getPointsCoordinates();
 	}
