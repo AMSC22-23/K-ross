@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
 	int count=0;
 	for(auto& row : data )
 	{
-		cout << "Point " << count << endl;
 		vector<double> values;
 		values.push_back(row.f1);
 		values.push_back(row.f2);

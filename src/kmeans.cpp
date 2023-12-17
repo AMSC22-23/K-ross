@@ -75,8 +75,6 @@ using namespace std;
 				if(old_cluster != -1)
 					clusters[old_cluster].removePointFromCluster(all_points.getPoint(i).getID());
 				all_points.getPoint(i).setCluster(nearest_cluster);
-				cout << "---->" << nearest_cluster << endl;
-				cout << "--->" << all_points.getPoint(i).getCluster() << endl;
 				clusters[nearest_cluster].addPoint(all_points.getPoint(i));
 				changed = true;
 			}
