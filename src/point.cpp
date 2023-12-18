@@ -13,6 +13,9 @@ using namespace std;
 		this->id_point = id_point;
 		total_values = values.size(); // allocate the correct number of features
 
+		//@note: you can simply do this->values = values
+		//       moreover the fact that they have the same name is very confunsing
+		//       should use some convetion. e.g. all class members have a prefix `m_`
 		for(int i = 0; i < total_values; i++)
 			this->values.push_back(values[i]); // copy the values of the features
 

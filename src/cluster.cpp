@@ -46,6 +46,8 @@ using namespace std;
 	{
 		return central_values[index];
 	}
+
+	//@note: you may cache this result among the private attributes to avoid computations
 	vector<vector<double>> Cluster::getCentralValueCoordinates() // returns the centroid of the cluster
 	{
 		vector<vector<double>> coordinates;
@@ -73,6 +75,7 @@ using namespace std;
 		return id_cluster;
 	}
 
+	//@note: you may cache this result among the private attributes to avoid computations
 	vector<vector<double>> Cluster::getPointsCoordinates()
 	{
 		vector<vector<double>> points_coordinates;

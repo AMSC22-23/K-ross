@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
 		vector<double> values;
 		values.push_back(row.f1);
 		values.push_back(row.f2);
+		//@note: this would have been a nice use of `emplace_back` 
 		points.push_back(Point(row.id, values, row.name));
 	}
 

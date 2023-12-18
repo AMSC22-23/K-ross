@@ -17,8 +17,8 @@ CXX = g++
 # -Wshadow warns about variable shadowing.
 # -Wconversion warns about implicit type conversions.
 # -DPARALELL_VERSION
-CXXFLAGS = -std=c++20 -I/usr/include/boost/ -DPARALELL_VERSION
-LDFLAGS += -lutil -lboost_iostreams -lboost_system -lboost_filesystem
+CXXFLAGS = -std=c++20 -I${mkBoostInc} -DPARALELL_VERSION
+LDFLAGS += -lutil -L${mkBoostLib} -lboost_iostreams -lboost_system -lboost_filesystem
 
 # Build directory in the root
 BUILD_DIR = ./build

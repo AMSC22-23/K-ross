@@ -24,6 +24,7 @@ using namespace std;
 
 		for(int i = 0; i < total_values; i++) // for each feature of the point
 		{
+			//@note: power with integer exponent should not use std::pow
 			sum += pow(clusters[0].getCentralValue(i) -
 					   point.getValue(i), 2.0);
 		}
@@ -95,6 +96,7 @@ using namespace std;
 				{
 					prohibited_indexes.push_back(index_point);
 					points[index_point].setCluster(i);
+					//@note: here could use emplace_back instead
 					Cluster cluster(i, points[index_point]);
 					clusters.push_back(cluster);
 					break;
@@ -133,6 +135,8 @@ using namespace std;
 //---------------------Da NON runnare in paralllo----------------------------------
 //---------------------------------------------------------------------------------
 
+			//@note: it is very nice to have a plot, but you SHOULD decouple 
+			//       the features of plotting and actually running the algorithm
 			// ciclo per definire gnuplot command
 			for(int i = 0; i < K; i++)
 			{
