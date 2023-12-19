@@ -1,7 +1,7 @@
 # MPI Parallel K-means implementation
 This project is an implementation of the K-Means clustering algorithm in C++. It reads data from CSV files, performs K-Means clustering on the data, and generates an animation of the clustering process.
 
-## Requisites
+## Prerequisites
 In order to be able to compile and run the program there are a few programs that need to be installed.
 ### mk modules
 - Needed in order to use the gnuplot-iostream library
@@ -70,9 +70,11 @@ The algorithm is implemented in the KMeans class, which is defined in include/kM
 
 ![Animazione Clusters](clustering_animation.gif)
 
-## sequential implementation
+## Sequential 
+Brief representation of the sequential algorithm implemented
 ![Seq imp](sequential_img.png)
-## parallel implementation
+## Parallel
+How the logic of the algorithm changes in order to be parallelized with MPI 
 ![Par imp](parallel_img.png)
 
 ## Authors
