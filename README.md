@@ -10,12 +10,6 @@ In order to be able to compile and run the program there are a few programs that
 ### Gnuplot
 - Needed to plot the graph of clusters
 - Refer to the official website http://www.gnuplot.info/
-- To install with bash:
-```bash
-sudo apt-get update
-sudo apt-get install gnuplot
-
-```
 
 ## Getting Started
 To compile the project, navigate to the project  root directory in your terminal and run the following commands:
@@ -78,7 +72,7 @@ How the logic of the algorithm changes in order to be parallelized with MPI
 ![Par imp](parallel_img.png)
 
 ## Authors
-Leognazio Pagliochini - Francesco Rosnati - Riccardo Selis
+Leonardo Ignazio Pagliochini - Francesco Rosnati - Riccardo Selis
 
 
 
@@ -100,8 +94,7 @@ loads the requested module. This creates a set of environment variables storing 
 - `module --help`: to show a list of all the commands
 
 ## Installation
-The mk modules are natively available **only for (reasonably modern) Linux distributions**. However, do not worry if you do not have a machine with Linux, here you find a flowchart of how you can obtain the mk modules (and a Linux distribution) depending on your OS:
-![Installation Flowchart](./assets/installation-flowchart.png)
+The mk modules are natively available **only for (reasonably modern) Linux distributions**.
 
 ### Download and install the modules
 
