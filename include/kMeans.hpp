@@ -18,7 +18,9 @@ public:
     void run(const int& rank, const int& world_size);
     void printClusters() const;
     void plotClusters();
+    int getNumberOfIterationForConvergence();
 private:
+    int numberOfIterationForConvergence;
     int k;
     std::vector<Point> points;
     std::vector<Point> centroids;

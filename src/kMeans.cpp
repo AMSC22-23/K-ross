@@ -22,7 +22,6 @@
         while (change && iter < iter_max)
         {
             if (rank == 0)
-                std::cout << "iter: " << iter+1 << std::endl;
             change = false;
             // --------------------------------------------
             for (Point &p : points)
@@ -88,28 +87,35 @@
             {
                 //std::cout << " bonaaa " << std::endl;
                 counts = std::vector<int>(k, 0);
-                centroids = std::vector<Point>(k, Point());
+                centroids = std::vector<Point>(k, Point(points[0].numberOfFeatures));
                 for (Point p : points)
                 {
-                    centroids[p.clusterId].setX(centroids[p.clusterId].getX()+p.getX());
-                    centroids[p.clusterId].setY(centroids[p.clusterId].getY()+p.getY());
+                    for (int i = 0; i < p.numberOfFeatures; ++i)
+                    {
+                        centroids[p.clusterId].setFeature(i, centroids[p.clusterId].getFeature(i) + p.getFeature(i));
+                    }
                     counts[p.clusterId] += 1;
                 }
 
                 for (int i = 0; i < k; ++i)
                 {
-                    centroids[i].setX(centroids[i].getX()/counts[i]);
-                    centroids[i].setY(centroids[i].getY()/counts[i]);
+                    for (int j = 0; j < centroids[i].numberOfFeatures; ++j)
+                    {
+                        centroids[i].setFeature(j, centroids[i].getFeature(j) / counts[i]);
+                    }
                 }
             }
             for (int i = 0; i < k; ++i)
             {
-                MPI_Bcast(&centroids[i].getX(), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-                MPI_Bcast(&centroids[i].getY(), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                for (int j = 0; j < centroids[i].numberOfFeatures; ++j)
+                {
+                    MPI_Bcast(&centroids[i].features[j], 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                }
             }
             MPI_Bcast(&change, 1, MPI_C_BOOL, 0, MPI_COMM_WORLD);
             iter++;
         }
+        numberOfIterationForConvergence = iter;
     }
     void KMeans::printClusters()  const
     {
@@ -120,15 +126,26 @@
             {
                 if (p.clusterId == i)
                 {
-                    std::cout << "Point " << p.id << ": (" << p.getX() << ", " << p.getY() << ")\n";
+                    std::cout << "Point " << p.id << ": (";
+                    for (int j = 0; j < p.numberOfFeatures; ++j)
+                    {
+                        std::cout << p.getFeature(j);
+                        if (j < p.numberOfFeatures - 1)
+                            std::cout << ", ";
+                    }
+                    std::cout << ")"<< std::endl;
                 }
             }
-            std::cout << "\n";
         }
     }
 
     void KMeans::plotClusters()
     {
+        if(centroids[0].numberOfFeatures != 2)
+        {
+            std::cout << "Cannot plot clusters with more than 2 features" << std::endl;
+            return;
+        }
         gp << "set xrange [20:70]\nset yrange [0:30]\n";
         gp << "set key outside\n"; // Add this line to place the legend outside the plot
         std::vector<std::string> colors = {"red", "blue", "green", "brown", "purple", "orange", "cyan", "violet"};
@@ -140,7 +157,7 @@
             {
                 if (p.clusterId == i)
                 {
-                    pts.emplace_back(std::make_pair(p.getX(), p.getY()));
+                    pts.emplace_back(std::make_pair(p.getFeature(0), p.getFeature(1)));
                 }
             }
             gp << "'-' with points pointtype 7 pointsize 1 lc rgb '" << colors[i % colors.size()] << "' title 'Cluster " << i + 1 << "'"; // Add a title to each plot command
@@ -158,7 +175,7 @@
             {
                 if (p.clusterId == i)
                 {
-                    pts.emplace_back(std::make_pair(p.getX(), p.getY()));
+                    pts.push_back(std::make_pair(p.getFeature(0), p.getFeature(1)));
                 }
             }
             gp.send1d(pts);
@@ -166,7 +183,12 @@
         std::vector<std::pair<double, double>> centroid_pts;
         for (Point c : centroids)
         {
-            centroid_pts.emplace_back(std::make_pair(c.getX(), c.getY()));
+            centroid_pts.push_back(std::make_pair(c.getFeature(0), c.getFeature(1)));
         }
         gp.send1d(centroid_pts);
+    }
+
+    int KMeans::getNumberOfIterationForConvergence()
+    {
+        return numberOfIterationForConvergence;
     }

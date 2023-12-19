@@ -2,23 +2,24 @@
 #define POINT_HPP
 
 #include <cmath>
+#include <vector>
 
 class Point
 {
+
 public:
     int id;
-    double x, y;
+    std::vector<double> features;
+    int numberOfFeatures;
     int clusterId;
     // double minDist;
 
-    Point();
-    Point(const int& id, const double& x, const double& y);
+    Point(int features_size);
+    Point(const int& id, const std::vector<double>& coordinates);
     double distance(const Point& p) const;
 
-    double& getX() ;
-    double& getY() ;
-    void setX(double x);
-    void setY(double y);
+    double& getFeature(int index) ;
+    void setFeature(int index, double x);
 };
 
 

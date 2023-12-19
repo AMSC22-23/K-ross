@@ -9,7 +9,6 @@
 #include <thread>
 #include <random>
 #include <mpi.h>
-#include <chrono>
 
 #include "point.hpp"
 #include "kMeans.hpp"
@@ -29,31 +28,44 @@ int main()
     CSVReader reader("./Files/profiling.csv");
     std::vector<Point> points = reader.readData();
     int k;
+    char printcluster = 'n';
     if (rank == 0)
     {
-        std::cout << "Enter the number of clusters: ";
+        std::cout << "Enter the number of clusters --> ";
         std::cin >> k;
-        while(k<0 || k > points.size())
+        while(k<1 || k > points.size())
         {
-            std::cout << "Enter the number of clusters: ";
+            std::cout << "Please enter a number between " << 1 << " and " << points.size() << " --> ";
             std::cin >> k;
         }
+        if (k > 8)
+        {
+            printcluster = 'y';
+        }
+        else
+        {
+            std::cout << "Do you want to print the clusters on the terminal? (y/n) --> ";
+        std::cin >> printcluster;
+        while (printcluster != 'y' && printcluster != 'n')
+        {
+            std::cout << "Please insert y or n --> ";
+            std::cin >> printcluster;
+        }
+        }
+        
     }
 
     MPI_Bcast(&k, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
     KMeans kmeans(k, points);
-    auto start = std::chrono::high_resolution_clock::now();
     kmeans.run(rank, world_size);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    if (rank == 0)
-        std::cout << "Time: " << elapsed.count() << " s" << std::endl;
     if (rank == 0)
     {
-        //kmeans.printClusters();
+        if (printcluster == 'y')
+            kmeans.printClusters();
         if (k <= 8)
             kmeans.plotClusters();
+        std::cout << "Number of iterations for convergence: " << kmeans.getNumberOfIterationForConvergence() << std::endl;
 
     }
     MPI_Finalize();
