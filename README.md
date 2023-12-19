@@ -1,10 +1,29 @@
 # Kmeans
 This project is an implementation of the K-Means clustering algorithm in C++. It reads data from CSV files, performs K-Means clustering on the data, and generates an animation of the clustering process.
 
+## Requisites
+In order to be able to compile and run the program there are a few programs that need to be installed.
+### mk modules
+- Needed in order to use the gnuplot-iostream library
+- Follow the instructions at the end of this README
+
+### Gnuplot
+- Needed to plot the graph of clusters
+- Refer to the official website http://www.gnuplot.info/
+- To install with bash:
+```bash
+sudo apt-get update
+sudo apt-get install gnuplot
+
+```
+
 ## Getting Started
-To compile the project, navigate to the project  root directory in your terminal and run the following command:
+To compile the project, navigate to the project  root directory in your terminal and run the following commands:
 
 ```bash
+module load gcc-glibc  #if not already loaded
+module load boost  #if not already loaded
+
 make
 ```
 This will compile the source files and link them into an executable named <kbd>exe</kbd> that will be created in the project root folder.
@@ -14,7 +33,7 @@ You then run the <kbd>exe</kbd> with
 ```bash
 mpirun -n num_of_processes ./exe
 ```
-set num_of_processes as you prfefer.
+set num_of_processes as you prefer
 
 
 ## What to expect
@@ -49,5 +68,53 @@ The K-Means clustering algorithm works as follows:
 
 The algorithm is implemented in the KMeans class, which is defined in include/kMeans.hpp and implemented in src/kMeans.cpp. The KMeans class also includes methods for printing the clusters and for generating a plot of the clusters using the Gnuplot library.
 
+![Animazione Clusters](clustering_animation.gif)
+
+## sequential implementation
+![Seq imp](sequential_img.png)
+## parallel implementation
+![Par imp](parallel_img.png)
+
 ## Authors
 Leognazio Pagliochini - Francesco Rosnati - Riccardo Selis
+
+
+
+
+# MK MODULES
+## What are mk modules?
+
+[mk modules](https://github.com/pcafrica/mk) bundle a set of scientific libraries compiled under the same toolchain. Once installed, they provide the command module, that has several subcommands:
+
+```
+module load <module name> 
+```
+
+loads the requested module. This creates a set of environment variables storing relevant paths for that library (e.g. `mkEigenPrefix`, `mkEigenInc`, ...). Use
+
+- `env | grep mk`  to obtain a list of all the environment variables relative to mk modules
+- `module list`: to show a list of currently loaded modules
+- `module avail`: to show a list of all available modules (loaded or not)
+- `module --help`: to show a list of all the commands
+
+## Installation
+The mk modules are natively available **only for (reasonably modern) Linux distributions**. However, do not worry if you do not have a machine with Linux, here you find a flowchart of how you can obtain the mk modules (and a Linux distribution) depending on your OS:
+![Installation Flowchart](./assets/installation-flowchart.png)
+
+### Download and install the modules
+
+1. Download `mk-2022.0-full.tar.gz` from [this link](https://github.com/pcafrica/mk/releases/download/v2022.0/mk-2022.0-full.tar.gz). E.g.
+```bash
+wget https://github.com/pcafrica/mk/releases/download/v2022.0/mk-2022.0-full.tar.gz
+```
+2. `sudo tar xvzf mk-2022.0-full.tar.gz -C /` (~ 4.5GB required).
+
+To load them you should type each time you open the terminal `source /u/sw/etc/bash.bashrc`. However you can add the following lines to the `${HOME}/.bashrc` file (or equivalent) to have them always loaded:
+```bash
+# mk.
+source /u/sw/etc/bash.bashrc
+module load gcc-glibc/11.2.0
+module load eigen tbb
+```
+
+Complete user guide available [here](https://lmod.readthedocs.io/en/latest/010_user.html).

@@ -23,7 +23,6 @@ CFLAGS = -Wall -std=c++20 -I${mkBoostInc} -L${mkBoostLib} -I$(INC_DIR)
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	mkdir -p $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
