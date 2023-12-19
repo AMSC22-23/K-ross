@@ -1,12 +1,12 @@
 # Compiler
 CC = mpic++
 
-INC_DIR = ./include
 SRC_DIR = ./src
+INC_DIR = ./include
 BUILD_DIR = ./build
 
 # Compiler flags
-CFLAGS = -Wall -std=c++20 -I${mkBoostInc} -L${mkBoostLib}
+CFLAGS = -std=c++20 -I${mkBoostInc} -L${mkBoostLib} -I$(INC_DIR)
 
 # Libraries
 LIBS = -lutil -lboost_iostreams -lboost_system -lboost_filesystem
@@ -17,6 +17,8 @@ TARGET = exe
 # Source files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
+CFLAGS = -Wall -std=c++20 -I${mkBoostInc} -L${mkBoostLib} -I$(INC_DIR)
+
 
 all: $(TARGET)
 
