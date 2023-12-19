@@ -1,3 +1,4 @@
+//@note: use compile flags and include only "kMeans.hpp"
 #include "../include/kMeans.hpp"
 
     KMeans::KMeans(int k, std::vector<Point> &points) : k(k), points(points), gp("gnuplot -persist")
@@ -89,6 +90,7 @@
                 //std::cout << " bonaaa " << std::endl;
                 counts = std::vector<int>(k, 0);
                 centroids = std::vector<Point>(k, Point());
+                //@note: const reference
                 for (Point p : points)
                 {
                     centroids[p.clusterId].x += p.x;

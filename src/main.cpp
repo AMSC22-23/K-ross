@@ -16,6 +16,8 @@
 
 int main()
 {
+    //@note: should use argc, argv. 
+    //       More importantly in C++ at least use `nullptr` instead of `NULL`
     MPI_Init(NULL, NULL);
     int world_size;
     MPI_Comm_size(MPI_COMM_WORLD, &world_size);
@@ -24,6 +26,7 @@ int main()
 
     //std::cout << "Rank: " << rank << std::endl;
 
+    //@note: file name could have been read from executable arguments
     CSVReader reader("./Files/profiling.csv");
     std::vector<Point> points = reader.readData();
     int k;

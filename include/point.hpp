@@ -3,6 +3,7 @@
 
 #include <cmath>
 
+//@note: could have been nice if the point was n dimensional
 class Point
 {
 public:
@@ -13,6 +14,7 @@ public:
 
     Point();
     Point(int id, double x, double y);
+    //@note: const method
     double distance(Point p);
 };
 

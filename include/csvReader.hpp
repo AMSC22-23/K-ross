@@ -7,6 +7,10 @@
 #include <vector>
 #include <iostream>
 #include "point.hpp"
+
+//@note: nothing wrong with this being a class, but a free function would have had the 
+//       same semantics without the necessity of a class
+//@note: could be nice if could read CSV with arbitrary number of columns
 class CSVReader
 {
 public:

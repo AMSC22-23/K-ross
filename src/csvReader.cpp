@@ -1,3 +1,4 @@
+//@note: use compile flags and include only "csvReader.hpp"
 #include "../include/csvReader.hpp"
 
     CSVReader::CSVReader(const std::string &filename) : filename(filename) {}
@@ -29,11 +30,13 @@
             getline(ss, name, ',');
 
             // Convert std::strings to appropriate types
+            //@note: explicitly use std namespace
             int id = stoi(id_str);
             double f1 = stod(f1_str);
             double f2 = stod(f2_str);
 
             // Create a point and add it to the std::vector
+            //@note: could have been nice to use emplace back here
             points.push_back(Point(id - 1, f1, f2));
         }
 
