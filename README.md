@@ -18,9 +18,12 @@ sudo apt-get install gnuplot
 ```
 
 ## Getting Started
-To compile the project, navigate to the project  root directory in your terminal and run the following command:
+To compile the project, navigate to the project  root directory in your terminal and run the following commands:
 
 ```bash
+module load gcc-glibc  #if not already loaded
+module load boost  #if not already loaded
+
 make
 ```
 This will compile the source files and link them into an executable named <kbd>exe</kbd> that will be created in the project root folder.
@@ -64,6 +67,9 @@ The K-Means clustering algorithm works as follows:
 4. Repeat steps 2 and 3 until no point changes its cluster assignment or the maximum number of iterations is reached.
 
 The algorithm is implemented in the KMeans class, which is defined in include/kMeans.hpp and implemented in src/kMeans.cpp. The KMeans class also includes methods for printing the clusters and for generating a plot of the clusters using the Gnuplot library.
+
+![Alt Text](clustering_animation.gif)
+
 
 ## Authors
 Leognazio Pagliochini - Francesco Rosnati - Riccardo Selis
