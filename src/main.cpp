@@ -5,15 +5,15 @@
 #include <fstream>
 #include <sstream>
 #include <random>
-#include "../include/gnuplot-iostream.h"
+#include "gnuplot-iostream.h"
 #include <thread>
 #include <random>
 #include <mpi.h>
 #include <chrono>
 
-#include "../include/point.hpp"
-#include "../include/kMeans.hpp"
-#include "../include/csvReader.hpp"
+#include "point.hpp"
+#include "kMeans.hpp"
+#include "csvReader.hpp"
 
 
 int main()
