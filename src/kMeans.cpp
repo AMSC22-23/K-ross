@@ -1,6 +1,6 @@
 #include "../include/kMeans.hpp"
 
-    KMeans::KMeans(int k, std::vector<Point> &points) : k(k), points(points), gp("gnuplot -persist")
+    KMeans::KMeans(const int& k, const std::vector<Point> points) : k(k), points(points), gp("gnuplot -persist")
     {
         int size = points.size();
         std::random_device rd;                            // Initialize a random device
@@ -9,11 +9,11 @@
 
         for (int i = 0; i < k; ++i)
         {
-            centroids.push_back(points[dis(gen)]); // Generate a random index and use it to select a point
+            centroids.emplace_back(points[dis(gen)]); // Generate a random index and use it to select a point
         }
     }
 
-    void KMeans::run(int rank, int world_size)
+    void KMeans::run(const int& rank, const int& world_size)
     {
         bool change = true;
         int iter = 0;
@@ -91,28 +91,27 @@
                 centroids = std::vector<Point>(k, Point());
                 for (Point p : points)
                 {
-                    centroids[p.clusterId].x += p.x;
-                    centroids[p.clusterId].y += p.y;
+                    centroids[p.clusterId].setX(centroids[p.clusterId].getX()+p.getX());
+                    centroids[p.clusterId].setY(centroids[p.clusterId].getY()+p.getY());
                     counts[p.clusterId] += 1;
                 }
 
                 for (int i = 0; i < k; ++i)
                 {
-                    centroids[i].x /= counts[i];
-                    centroids[i].y /= counts[i];
+                    centroids[i].setX(centroids[i].getX()/counts[i]);
+                    centroids[i].setY(centroids[i].getY()/counts[i]);
                 }
-                //plotClusters(); // Plot clusters at each iteration
             }
             for (int i = 0; i < k; ++i)
             {
-                MPI_Bcast(&centroids[i].x, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-                MPI_Bcast(&centroids[i].y, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                MPI_Bcast(&centroids[i].getX(), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                MPI_Bcast(&centroids[i].getY(), 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
             }
             MPI_Bcast(&change, 1, MPI_C_BOOL, 0, MPI_COMM_WORLD);
             iter++;
         }
     }
-    void KMeans::printClusters()
+    void KMeans::printClusters()  const
     {
         for (int i = 0; i < k; ++i)
         {
@@ -121,7 +120,7 @@
             {
                 if (p.clusterId == i)
                 {
-                    std::cout << "Point " << p.id << ": (" << p.x << ", " << p.y << ")\n";
+                    std::cout << "Point " << p.id << ": (" << p.getX() << ", " << p.getY() << ")\n";
                 }
             }
             std::cout << "\n";
@@ -141,7 +140,7 @@
             {
                 if (p.clusterId == i)
                 {
-                    pts.push_back(std::make_pair(p.x, p.y));
+                    pts.emplace_back(std::make_pair(p.getX(), p.getY()));
                 }
             }
             gp << "'-' with points pointtype 7 pointsize 1 lc rgb '" << colors[i % colors.size()] << "' title 'Cluster " << i + 1 << "'"; // Add a title to each plot command
@@ -159,7 +158,7 @@
             {
                 if (p.clusterId == i)
                 {
-                    pts.push_back(std::make_pair(p.x, p.y));
+                    pts.emplace_back(std::make_pair(p.getX(), p.getY()));
                 }
             }
             gp.send1d(pts);
@@ -167,8 +166,7 @@
         std::vector<std::pair<double, double>> centroid_pts;
         for (Point c : centroids)
         {
-            centroid_pts.push_back(std::make_pair(c.x, c.y));
+            centroid_pts.emplace_back(std::make_pair(c.getX(), c.getY()));
         }
         gp.send1d(centroid_pts);
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }

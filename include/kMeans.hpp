@@ -13,10 +13,10 @@
 class KMeans
 {
 public:
-    KMeans(int k, std::vector<Point> &points);
+    KMeans(const int& k, const std::vector<Point> points);
 
-    void run(int rank, int world_size);
-    void printClusters();
+    void run(const int& rank, const int& world_size);
+    void printClusters() const;
     void plotClusters();
 private:
     int k;

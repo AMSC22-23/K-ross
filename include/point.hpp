@@ -12,8 +12,13 @@ public:
     // double minDist;
 
     Point();
-    Point(int id, double x, double y);
-    double distance(Point p);
+    Point(const int& id, const double& x, const double& y);
+    double distance(const Point& p) const;
+
+    double& getX() ;
+    double& getY() ;
+    void setX(double x);
+    void setY(double y);
 };
 
 

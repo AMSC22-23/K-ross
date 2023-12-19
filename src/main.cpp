@@ -9,6 +9,8 @@
 #include <thread>
 #include <random>
 #include <mpi.h>
+#include <chrono>
+
 #include "../include/point.hpp"
 #include "../include/kMeans.hpp"
 #include "../include/csvReader.hpp"
@@ -41,10 +43,15 @@ int main()
     MPI_Bcast(&k, 1, MPI_INT, 0, MPI_COMM_WORLD);
         
     KMeans kmeans(k, points);
+    auto start = std::chrono::high_resolution_clock::now();
     kmeans.run(rank, world_size);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed = end - start;
+    if (rank == 0)
+        std::cout << "Time: " << elapsed.count() << " s" << std::endl;
     if (rank == 0)
     {
-        kmeans.printClusters();
+        //kmeans.printClusters();
         if (k <= 8)
             kmeans.plotClusters();
 

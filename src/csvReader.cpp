@@ -34,7 +34,7 @@
             double f2 = stod(f2_str);
 
             // Create a point and add it to the std::vector
-            points.push_back(Point(id - 1, f1, f2));
+            points.emplace_back(Point(id - 1, f1, f2));
         }
 
         return points;

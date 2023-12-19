@@ -17,5 +17,4 @@ private:
     std::string filename;
 };
 
-
 #endif // CSVREADER_HPP
