@@ -33,7 +33,7 @@ You then run the <kbd>exe</kbd> with
 ```bash
 mpirun -n num_of_processes ./exe
 ```
-set num_of_processes as you prfefer.
+set num_of_processes as you prefer
 
 
 ## What to expect
@@ -68,8 +68,12 @@ The K-Means clustering algorithm works as follows:
 
 The algorithm is implemented in the KMeans class, which is defined in include/kMeans.hpp and implemented in src/kMeans.cpp. The KMeans class also includes methods for printing the clusters and for generating a plot of the clusters using the Gnuplot library.
 
-![Alt Text](clustering_animation.gif)
+![Animazione Clusters](clustering_animation.gif)
 
+## sequential implementation
+![Seq imp](sequential_img.png)
+## parallel implementation
+![Par imp](parallel_img.png)
 
 ## Authors
 Leognazio Pagliochini - Francesco Rosnati - Riccardo Selis
