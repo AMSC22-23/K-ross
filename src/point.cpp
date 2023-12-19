@@ -1,62 +1,10 @@
-#include <iostream>
-#include <vector>
+#include "../include/point.hpp"
 
-#include "point.hpp"
+Point::Point() : id(0), x(0.0), y(0.0), clusterId(-1) /*,minDist(std::numeric_limits<double>::max())*/ {}
 
+Point::Point(int id, double x, double y) : id(id), x(x), y(y), clusterId(-1) /*, minDist(std::numeric_limits<double>::max())*/ {}
 
-
-using namespace std;
-
-
-	Point::Point(int id_point, vector<double>& values, string name) // constructor
-	{
-		this->id_point = id_point;
-		total_values = values.size(); // allocate the correct number of features
-
-		for(int i = 0; i < total_values; i++)
-			this->values.push_back(values[i]); // copy the values of the features
-
-		this->name = name;
-		id_cluster = -1; // not assigned to any cluster yet
-	}
-
-	int Point::getID() // returns the id of the point
-	{
-		return id_point;
-	}
-
-	void Point::setCluster(int id_cluster) // assigns the point to the cluster with the given id
-	{
-		this->id_cluster = id_cluster;
-	}
-
-	int Point::getCluster() // returns the id of the cluster to which the point belongs
-	{
-		return id_cluster;
-	}
-
-	double Point::getValue(int index) // returns the value of the feature with the given index
-	{
-		return values[index];
-	}
-
-	int Point::getTotalValues() // returns the number of features
-	{
-		return total_values;
-	}
-
-	void Point::addValue(double value) // adds a value to the list of features
-	{
-		values.push_back(value);
-	}
-
-	string Point::getName() // returns the name of the point
-	{
-		return name;
-	}
-
-	vector<double> Point::getValues() // returns the vector of features
-	{
-		return values;
-	}
-
+double Point::distance(Point p)
+{
+    return sqrt(pow(x - p.x, 2.0) + pow(y - p.y, 2.0));
+}
