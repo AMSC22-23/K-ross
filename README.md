@@ -1,4 +1,4 @@
-# Kmeans
+# MPI Parallel K-means implementation
 This project is an implementation of the K-Means clustering algorithm in C++. It reads data from CSV files, performs K-Means clustering on the data, and generates an animation of the clustering process.
 
 ## Requisites
