@@ -1,62 +1,32 @@
-# Makefile for C++ project with source files in a separate directory
-
-
-# Makefile location: has to be in the root of the project
-
 # Compiler
-CXX = g++ 
+CC = mpic++
 
-# Compiler flags
-# -std=c++20 specifies the C++ standard
-# -g adds debugging information to the executable file
-# -Wall turns on most, but not all, compiler warnings
-# -Wextra enables some extra warning flags that are not enabled by -Wall
-# -Wpedantic to request all the warnings demanded by strict ISO C and ISO C++
-# -Wunused warns about unused variables.
-# -Wuninitialized warns about uninitialized variables.
-# -Wshadow warns about variable shadowing.
-# -Wconversion warns about implicit type conversions.
-# -DPARALELL_VERSION
-CXXFLAGS = -std=c++20 -I${mkBoostInc} -DPARALELL_VERSION
-LDFLAGS += -lutil -L${mkBoostLib} -lboost_iostreams -lboost_system -lboost_filesystem
-
-# Build directory in the root
+INC_DIR = ./include
+SRC_DIR = ./src
 BUILD_DIR = ./build
 
-# Source directory, in the root, contains all sourcefiles (.cpp)
-SRC_DIR = ./src
+# Compiler flags
+CFLAGS = -Wall -std=c++20 -I${mkBoostInc} -L${mkBoostLib}
 
-# Executable name
+# Libraries
+LIBS = -lutil -lboost_iostreams -lboost_system -lboost_filesystem
+
+# Target executable name
 TARGET = exe
 
-# Find all source files in the source directory
+# Source files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SRCS))
 
-# Object files
-OBJS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SRCS))
+all: $(TARGET)
 
-# Default target
-all: builddir $(TARGET) 
-
-# Rule to link the program
 $(TARGET): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
-# Rule to compile source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	mkdir -p $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Rule to clean the build directory
 clean:
-	rm -f $(BUILD_DIR)/*.o $(TARGET)
-
-# 
-.PHONY: all clean
-
-builddir: | $(BUILD_DIR)
-
-$(BUILD_DIR): 
-	mkdir -p $@
-
-
-
+	rm -rf $(BUILD_DIR) $(TARGET) $(OBJS)
